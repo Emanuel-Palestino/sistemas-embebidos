@@ -1,16 +1,16 @@
 int contador;
 // Tabla de valores
-char display[][17] = {
-	"1100000000000001",
-	"1111100100000001",
-	"1010010000000001",
-	"1011000000000001",
-	"1001100100000001",
-	"1001001000000001",
-	"1000001000000001",
-	"1111100000000001",
-	"1000000000000001",
-	"1001100000000001"};
+uint8_t display[] = {
+	0b11000000,
+	0b11111001,
+	0b10100100,
+	0b10110000,
+	0b10011001,
+	0b10010010,
+	0b10000010,
+	0b11111000,
+	0b10000000,
+	0b10011000};
 
 void setup()
 {
@@ -51,18 +51,45 @@ void loop()
 
 void mostrarNumero()
 {
-	// Datos
-	for (int i = 0; i < 16; i++)
+	// Datos de 7 segmentos del display
+	uint8_t auxiliar = display[contador];
+	for (int i = 0; i < 8; i++)
 	{
 		// Dato
-		PORTB = display[contador][i];
-		// SHCP Alto
-		PORTD = PORTD | 0b10000000;
+		if (auxiliar & 0x80)
+			PORTB = 0x01;
+		else
+			PORTB = 0x00;
 
-		// SHCP Bajo
+		// reloj SHCP Alto
+		PORTD = PORTD | 0b10000000;
+		// reloj SHCP Bajo
 		PORTD = PORTD & 0b01111111;
+
+		// Corrimiento
+		auxiliar <<= 1;
 	}
-	// STCP
+
+	// Datos de los displays
+	uint8_t auxiliar2 = 0x01;
+	for (int i = 0; i < 8; i++)
+	{
+		// Dato
+		if (auxiliar2 & 0x80)
+			PORTB = 0x01;
+		else
+			PORTB = 0x00;
+
+		// reloj SHCP Alto
+		PORTD = PORTD | 0b10000000;
+		// reloj SHCP Bajo
+		PORTD = PORTD & 0b01111111;
+
+		// Corrimiento
+		auxiliar2 <<= 1;
+	}
+
+	// reloj STCP
 	PORTD = PORTD | 0b00010000;
 	PORTD = PORTD & 0b11101111;
 }
