@@ -28,11 +28,11 @@ caso_0:
 
 caso_1:
 	LDI R18, 0x04
-	OUT _SFR_IO_ADDR(PORT), R18
+	OUT _SFR_IO_ADDR(PORTB), R18
 	SBIC _SFR_IO_ADDR(PINC), 2		// if(TA == 0)
 	LDI R24, 0x02					// estado = 2
 	SBIS _SFR_IO_ADDR(PINC), 1		// else if(SP == 1)
-	LDI, R24, 0x03					// estado = 3
+	LDI R24, 0x03					// estado = 3
 	RET
 
 caso_2:
