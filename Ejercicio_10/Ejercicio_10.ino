@@ -21,7 +21,7 @@ void setup() {
 	DDRB = 0xFF;	// Salida
 
 	// Configuración INT0/INT1
-	EICRA = 0x0A;	// Configurando INT0 y INT1
+	EICRA = 0x0A;	// Configurando INT0 y INT1 para que reaccione a flanco de bajada
 	EIMSK = 0x03;	// Habilita INT0 y INT1
 }
 
