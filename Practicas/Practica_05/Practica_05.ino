@@ -1,6 +1,6 @@
-int contador;
+uint16_t dato;
 // Tabla de valores
-uint8_t display[] = {
+uint8_t numeros[] = {
 	0b11000000,
 	0b11111001,
 	0b10100100,
@@ -10,8 +10,26 @@ uint8_t display[] = {
 	0b10000010,
 	0b11111000,
 	0b10000000,
-	0b10011000};
+	0b10011000
+  };
 
+ISR(PCINT1_vect) {
+	// Si se presiona el boton A1
+	if (!(PINC & 0x02))
+	{
+		dato = 1000;
+	}
+	// Si se presiona el boton A2
+	if (!(PINC & 0x04))
+	{
+		dato = (dato < 1000) ? dato + 1 : 0;
+	}
+	// Si se presiona el boton A3
+	if (!(PINC & 0x08))
+	{
+		dato = (dato > 0) ? dato - 1 : 1000;
+	}
+}
 void setup()
 {
 	// CONFIGURACIÓN I/O
@@ -22,37 +40,30 @@ void setup()
 	DDRB = 0x01;
 	DDRD = 0x90;
 
+  PCMSK1 = 0x0E; 	// Máscara para PC1, PC2 y PC3
+	PCICR = 0x02;	// Habilita PCINT1
+
 	// Inicializa contador
-	contador = 0;
-	mostrarNumero();
+	dato = 0;
+	mostrar(1,1);
 }
 
 void loop()
 {
-	// MANIPULAR EL CONTADOR
-
-	// Si se presiona el boton A1
-	if (!(PINC & 0x02))
-	{
-		contador = (contador < 9) ? contador + 1 : 0;
-		// Muestra el número en el display
-		mostrarNumero();
-	}
-	// Si se presiona el boton A2
-	if (!(PINC & 0x04))
-	{
-		contador = (contador > 0) ? contador - 1 : 9;
-		// Muestra el número en el display
-		mostrarNumero();
-	}
-
-	delay(200);
+  uint8_t unidad;
+  uint16_t aux=dato;
+  for (int i=3;i>=0;i--){
+    unidad= aux % 10;
+    aux= aux/10;
+    mostrar(unidad, potencia(2,i));
+    delay(5);
+  }
 }
 
-void mostrarNumero()
+void mostrar(uint8_t dato, uint8_t display)
 {
 	// Datos de 7 segmentos del display
-	uint8_t auxiliar = display[contador];
+	uint8_t auxiliar = numeros[dato];
 	for (int i = 0; i < 8; i++)
 	{
 		// Dato
@@ -71,7 +82,7 @@ void mostrarNumero()
 	}
 
 	// Datos de los displays
-	uint8_t auxiliar2 = 0x01;
+	uint8_t auxiliar2 = display;
 	for (int i = 0; i < 8; i++)
 	{
 		// Dato
@@ -92,4 +103,16 @@ void mostrarNumero()
 	// reloj STCP
 	PORTD = PORTD | 0b00010000;
 	PORTD = PORTD & 0b11101111;
+}
+uint8_t potencia(uint8_t base, uint8_t mipow)
+{
+    if(mipow==0)
+     return 1;
+    uint8_t resultado = base;
+    while (mipow > 1)
+    {
+        resultado = resultado * base;
+        mipow --;
+    }
+    return resultado;
 }
