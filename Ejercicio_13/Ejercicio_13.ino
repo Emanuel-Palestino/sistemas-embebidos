@@ -1,16 +1,11 @@
 // Timers Ejemplo 1: Escriba una secuencia de instrucciones para generar una señal de 50KHz. Es igual a 160 ciclos de reloj normales (16MHz)
-// a) Genere la señal en PD0, por lo que no podrá usar una respuesta automática.
-
-ISR(TIMER0_COMPA_vect) {
-	PIND = 0x01;
-}
+// b) Genere la salida en PD6 (OC0A), configurando una respuesta automática
 
 void setup() {
-	DDRD = 0x01;	// Salida
+	DDRD = 0x40;	// Salida en PD6
 	OCR0A = 159;	// Valor para comparación
-	TCCR0A = 0x02;	// Modo CTC
+	TCCR0A = 0x42;	// Modo CTC
 	TCCR0B = 0x01;	// Uso de reloj sin pre-escalador
-	TIMSK0 = 0x02;	// Interrupción por coincidencia con el comparador A.
 }
 
 void loop() {
