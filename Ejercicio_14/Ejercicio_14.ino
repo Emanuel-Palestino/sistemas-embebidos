@@ -6,24 +6,32 @@
 
 void setup()
 {
-	// config I/O
+	// Config I/O
 	DDRC = 0x00;		// Botón
-	DDRD = 0x40;		// Salida en PD
-	// config PCINT2
-	// camios en PC0
+	DDRD = 0x40;		// Salida en PD6
+	// Config PCINT1
+	// 	camios en PC0
+	PORTC = 0x01; 		// Pull-up en PC0
+	PCMSK1 = 0x01;		// Máscara para PC0
+	PCICR = 0x02;		// Habilita PCINT1
 
-	// config Timer 0
-	// modo ctc
-	// preescala de 256
-	// con respuesta automática
-	// inicia sin reloj
+	// Config Timer 0
+	// 	modo ctc
+	// 	preescala de 256
+	// 	con respuesta automática
+	// 	inicia sin reloj
+	OCR0A = 78;			// Valor de comparación
+	TCCR0A = 0x42;		// Modo CTC con respuesta automática
+	TCCR0B = 0x00;		// Uso del reloj sin preescalador
 }
 
-ISR(int2) {
-	if (pc0 == 0) {
-		// reloj al timer
+ISR(PCINT1_vect) {
+	if (!(PINC & 0x01)) {
+		// preescalado de 256 al timer
+		TCCR0B = 0x08;
 	} else {
-		// timer 0 sin reloj
+		// sin preescalado al timer
+		TCCR0B = 0x00;
 	}
 }
 
