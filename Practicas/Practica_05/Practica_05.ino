@@ -34,7 +34,7 @@ void setup()
 {
 	// CONFIGURACIÓN I/O
 
-	// Establece A1 y A2 como entradas
+	// Establece A1, A2 y A3 como entradas
 	DDRC = 0x00;
 	// Establece PB0, PD7 y PD4 como salidas
 	DDRB = 0x01;
