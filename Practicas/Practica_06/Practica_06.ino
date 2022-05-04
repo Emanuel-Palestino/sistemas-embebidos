@@ -22,7 +22,6 @@ ISR(PCINT1_vect)
 	if (!(PINC & 0x02))
 	{
 		// pausar timer, deshabilita otros dos botones
-		// TCCR1B = (TCCR1B == apagado) ? encendido : apagado;
 		if (TCCR1B == apagado)
 		{
 			// OCR1A = 62499;
