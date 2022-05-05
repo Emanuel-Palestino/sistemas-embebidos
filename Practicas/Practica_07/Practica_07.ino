@@ -2,9 +2,9 @@
 // la cual será modificada con incrementos de un 20% cada vez que el botón es presionado. (Al encender el sistema, el LED debe estar apagado).
 // Para una adecuada operación del LED, configure para que la señal PWM tenga unn frecuencia de 100Hz.
 
-#include <Displays_MFS.h>
+//#include <Displays_MFS.h>
 
-uint8_t ancho = 15;
+uint8_t ancho = 75;
 
 void setup()
 {
@@ -13,6 +13,7 @@ void setup()
 	// config. I/O
 	DDRC = 0x00;
 	DDRB = 0x08;  // Salida en PB3
+  DDRD = 0x08;  // Salida en PD3
 
 	// config. PCINT1
 	PCMSK1 = 0x0E; // Máscara para PC1
@@ -23,7 +24,7 @@ void setup()
 	TCCR2B = 0x0F;	// Preescalado de 1024
   
   OCR2A = 150;
-    OCR2B = 15;  
+    OCR2B = 75;  
 }
 
 ISR(PCINT1_vect) {
