@@ -2,31 +2,45 @@
 // la cual será modificada con incrementos de un 20% cada vez que el botón es presionado. (Al encender el sistema, el LED debe estar apagado).
 // Para una adecuada operación del LED, configure para que la señal PWM tenga unn frecuencia de 100Hz.
 
-uint16_t ancho = 0;
+#include <Displays_MFS.h>
+
+uint8_t ancho = 15;
 
 void setup()
 {
+  Serial.begin(9600);
+  
 	// config. I/O
 	DDRC = 0x00;
-	DDRB = 0x04;  // Salida en PB2
+	DDRB = 0x08;  // Salida en PB3
 
 	// config. PCINT1
-	PCMSK1 = 0x02; // Máscara para PC1
+	PCMSK1 = 0x0E; // Máscara para PC1
 	PCICR = 0x02;  // Habilita PCINT1
 
-	// config. Timer 1 para PWM
-	TCCR1A = 0x33;	// Modo 15, Modo invertido
-	TCCR1B = 0x1A;	// Preescalado de 8
-	TCCR1C = 0x00;
-  OCR1A = 20000;  // Valor máximo
-  OCR1B = 0;    // Inicia Apagado
+	// config. Timer 2 para PWM
+	TCCR2A = 0x33;	// Modo 7, Modo invertido
+	TCCR2B = 0x0F;	// Preescalado de 1024
+  
+  OCR2A = 150;
+    OCR2B = 15;  
 }
 
 ISR(PCINT1_vect) {
+
+
+  
 	if(!(PINC & 0x02)) {
-		ancho = (ancho < 20000) ? ancho + 4000 : 0;
-		OCR1B = ancho;
+		ancho = (ancho < 150) ? ancho + 15 : 0;
+		OCR2B = ancho;
+      Serial.println(PB3, HEX);
 	}
+
+  if(!(PINC & 0x04)) {
+    ancho = (ancho > 0) ? ancho - 15 : 150;
+    OCR2B = ancho;
+  }
+  
 }
 
 void loop()
