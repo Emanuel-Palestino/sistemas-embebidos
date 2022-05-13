@@ -10,16 +10,11 @@ void setup()
 	DDRC = 0x00;		// Botón
 	DDRD = 0x40;		// Salida en PD6
 	// Config PCINT1
-	// 	camios en PC0
 	PORTC = 0x01; 		// Pull-up en PC0
 	PCMSK1 = 0x01;		// Máscara para PC0
 	PCICR = 0x02;		// Habilita PCINT1
 
 	// Config Timer 0
-	// 	modo ctc
-	// 	preescala de 256
-	// 	con respuesta automática
-	// 	inicia sin reloj
 	OCR0A = 78;			// Valor de comparación
 	TCCR0A = 0x42;		// Modo CTC con respuesta automática
 	TCCR0B = 0x00;		// Uso del reloj sin preescalador

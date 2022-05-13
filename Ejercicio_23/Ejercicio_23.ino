@@ -1,4 +1,6 @@
 // ADC - Ejercicio 3
+// Muestre el valor digital generado por el ptenciómetro conectado en A0 en los 4 displays de 7 segmentos del shield multifunción.
+// Utilice el temporizador 1 con ayuda del preescalador, para actualizar la información cada medio segundo.
 
 #include <Displays_MFS.h>
 
