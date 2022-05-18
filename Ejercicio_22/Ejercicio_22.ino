@@ -1,4 +1,6 @@
 // ADC - Ejercicio 2
+// Uilice el valor digital generado por el potenciómetro conectado en A0 para modificar la intensidad del LED conectado en PB3,
+// para ello, debe generar una señal PWM con el temporizador 2, aproxime su frecuencia a 100hz
 void setup()
 {
 	DDRC = 0x00;
