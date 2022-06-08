@@ -19,7 +19,7 @@ void setup() {
 	envia_SPI(0x09, 0x00);
 
 	// Intensidad
-	envia_SPI(0x0A, 0x00);
+	envia_SPI(0x0A, 0x07);
 
 	// Límite
 	envia_SPI(0x0B, 0x07);
