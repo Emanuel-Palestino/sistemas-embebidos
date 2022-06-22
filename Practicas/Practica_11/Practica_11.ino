@@ -22,13 +22,13 @@ void setup() {
 	TWI_Config();
 	initDisplays();
 
-	// escribir(0x00, 0x00); // segundos
-	// escribir(0x11, 0x01); // minutos
-	// escribir(0x19, 0x02); // horas
-	// escribir(0x03, 0x03); // dia (semana)
-	// escribir(0x08, 0x04); // dia (mes)
-	// escribir(0x06, 0x05); // mes
-	// escribir(0x22, 0x06); // año
+	//escribir(0x00, 0x00); // segundos
+	//escribir(0x20, 0x01); // minutos
+	//escribir(0x09, 0x02); // horas
+	//escribir(0x01, 0x03); // dia (semana)
+	//escribir(0x13, 0x04); // dia (mes)
+	//escribir(0x06, 0x05); // mes
+	//escribir(0x22, 0x06); // año
 
 }
 
