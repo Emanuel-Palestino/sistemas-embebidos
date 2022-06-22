@@ -2,6 +2,8 @@
 
 #define RGB_SENSOR 0x29
 
+char respuesta[12];
+
 void setup() {
 	DDRC = 0x00;	// A1 entrada
 	DDRD = 0x00; 	// Dato. Entrada de selección.
@@ -10,44 +12,32 @@ void setup() {
 	PCICR = 0x02;	// Habilita PCINT1
 
 	// Configuración USART
-	// UBRR0 = 103;
-	// UCSR0A = 0x00;
-	// UCSR0B = 0x98;
-	// UCSR0C = 0x06;
+	UBRR0 = 103;
+	UCSR0A = 0x00;
+	UCSR0B = 0x98;
+	UCSR0C = 0x06;
 
 	TWI_Config();
-	Serial.begin(9600);
-
-	uint8_t dato[2], edo;
-
-	// edo = lee(&dato, 0x92);
-	// Serial.println("Dato: " + String(dato) + "Edo: " + String(edo));
 
 	// Inicialización del sensor
 	escribir(0, 0x81);	// maxima sensibilidad
 	escribir(0, 0x8F);	// ganancia en 1
 	escribir(3, 0x80);	// habilita ADC y activa el sensor
-
-
-
-
 }
 
 
-// ISR(USART_RX_vect) {
-// 	uint8_t aux;
-// 	aux = UDR0;
-
-// }
-
-void loop() {
+ISR(USART_RX_vect) {
+	uint8_t aux;
 	uint16_t r, g, b;
+	aux = UDR0;
+	
 	getRGB(&r, &g, &b);
 
-	Serial.println(String(r) + "," + String(g) + "," + String(b));
-
-	delay(500);
+	sprintf(respuesta, "%u,%u,%u", r, g, b);
+	envia_cadena(respuesta);
 }
+
+void loop() {}
 
 uint8_t lee(uint8_t *dato, uint8_t dir) {
 	uint8_t edo, i;
@@ -156,10 +146,6 @@ void getRGB(uint16_t *r, uint16_t *g, uint16_t *b) {
 	lee(datos, 0x9A);
 	*b = (datos[1] << 8) | datos[0];
 
-	// Serial.print("Clear: " + String(clear) + ", UNO: ");
-  	// Serial.println(String(*r) + "," + String(*g) + "," + String(*b));
-
-
 	if (clear == 0) {
 		*r = *g = *b = 0;
 		return;
@@ -184,22 +170,22 @@ void getRGB(uint16_t *r, uint16_t *g, uint16_t *b) {
   
 }
 
-// void envia_cadena(char *cad) {
-// 	uint8_t c, i = 0;
+void envia_cadena(char *cad) {
+	uint8_t c, i = 0;
 
-// 	c = cad[0];
-// 	while (c != 0x00){
-// 		while (!(UCSR0A & 1 << UDRE0))
-// 			; // Asegura buffer vacío
-// 		UDR0 = c;
-// 		i = i + 1;
-// 		c = cad[i];
-// 	}
+	c = cad[0];
+	while (c != 0x00){
+		while (!(UCSR0A & 1 << UDRE0))
+			; // Asegura buffer vacío
+		UDR0 = c;
+		i = i + 1;
+		c = cad[i];
+	}
 
-// 	while (!(UCSR0A & 1 << UDRE0))
-// 		; // Asegura buffer vacío
-// 	UDR0 = 0x0D;
-// 	while (!(UCSR0A & 1 << UDRE0))
-// 		; // Asegura buffer vacío
-// 	UDR0 = 0x0A;
-// }
+	while (!(UCSR0A & 1 << UDRE0))
+		; // Asegura buffer vacío
+	UDR0 = 0x0D;
+	while (!(UCSR0A & 1 << UDRE0))
+		; // Asegura buffer vacío
+	UDR0 = 0x0A;
+}
