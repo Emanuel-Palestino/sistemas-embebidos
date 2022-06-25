@@ -40,7 +40,7 @@ def cambio_color():
 	cadena = ser.readline().decode("utf-8").strip().split(",")
 	valor_rgb = a_rgb((int(cadena[0]), int(cadena[1]), int(cadena[2])))
 	fondo.configure(bg=valor_rgb)
-	rgb_label["text"] = f'Hexadecimal: {valor_rgb}'
+	rgb_label["text"] = f'RGB: {", ".join(cadena)}\nHexadecimal: {valor_rgb}'
 
 # Botón para detectar el color
 boton = ttk.Button(text="Detectar color", command=cambio_color)
